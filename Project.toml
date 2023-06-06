@@ -1,4 +1,4 @@
-name = "OMParser"
+name = "OMKParser"
 uuid = "2c54b994-9301-4e2a-a5cc-a7604ce4b9e0"
 authors = ["Manuel Krombholz <manuel_krofficia@online.de>","Adrian Pop <adrian.pop@liu.se", "John Tinnerholm <john.tinnerholm@liu.se>"]
 version = "0.0.2"
