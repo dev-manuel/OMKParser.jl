@@ -34,7 +34,7 @@ AC_SUBST(JULIA_CFLAGS)
 AC_SUBST(JULIA_LDFLAGS)
 AC_SUBST(JULIA_LDLIBS)
 
-FINAL_MESSAGES="\nConfigured OMParser.jl successfully using the following options: []"
+FINAL_MESSAGES="\nConfigured OMKParser.jl successfully using the following options: []"
 
 m4_include([common/m4/pre-commit.m4])
 cp common/install-sh common/config.guess common/config.sub ./

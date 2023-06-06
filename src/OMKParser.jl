@@ -1,12 +1,12 @@
-module OMParser
+module OMKParser
 
-import Absyn, MetaModelica, ImmutableList
+import MKAbsyn, MetaModelica, ImmutableList
 #= For searching files.. =#
 import Glob
 using MetaModelica
 
 #import Settings
-const INSTALLATION_DIRECTORY_PATH = realpath(realpath(dirname(Base.find_package("OMParser")) * "/../"))
+const INSTALLATION_DIRECTORY_PATH = realpath(realpath(dirname(Base.find_package("OMKParser")) * "/../"))
 
 #Shared path
 const SHARED_DIRECTORY_PATH = realpath(string(INSTALLATION_DIRECTORY_PATH, "/lib/ext"))
@@ -14,9 +14,9 @@ const SHARED_DIRECTORY_PATH = realpath(string(INSTALLATION_DIRECTORY_PATH, "/lib
 struct ParseError
 end
 
-function isDerCref(exp::Absyn.Exp)::Bool
+function isDerCref(exp::MKAbsyn.Exp)::Bool
   @match exp begin
-    Absyn.CALL(Absyn.CREF_IDENT("der",  nil()), Absyn.FUNCTIONARGS(Absyn.CREF(__) <|  nil(),  nil()), nil())  => true
+    MKAbsyn.CALL(MKAbsyn.CREF_IDENT("der",  nil()), MKAbsyn.FUNCTIONARGS(MKAbsyn.CREF(__) <|  nil(),  nil()), nil())  => true
     _ => false
   end
 end
@@ -129,7 +129,7 @@ end
 # ("3.4", 34), ("3.5", 35), ("latest",1000), ("experimental", 9999)
 # acceptedGram:
 # 1=Modelica, 2=MetaModelica, 3=ParModelica, 4=Optimica, 5=PdeModelica
-function parseString(contents::String, interactiveFileName::String = "<default>", acceptedGram::Int64 = 1, languageStandard::Int64 = 1000)::Absyn.Program
+function parseString(contents::String, interactiveFileName::String = "<default>", acceptedGram::Int64 = 1, languageStandard::Int64 = 1000)::MKAbsyn.Program
   local res = ccall((:parseString, installedLibPath), Any, (String, String, Int64, Int64), contents, interactiveFileName, acceptedGram, languageStandard)
   if res == nothing
     throw(ParseError())
@@ -142,7 +142,7 @@ end
 # ("3.4", 34), ("3.5", 35), ("latest",1000), ("experimental", 9999)
 # acceptedGram:
 # 1=Modelica, 2=MetaModelica, 3=ParModelica, 4=Optimica, 5=PdeModelica
-function parseFile(fileName::String, acceptedGram::Int64 = 1, languageStandard::Int64 = 1000)::Absyn.Program
+function parseFile(fileName::String, acceptedGram::Int64 = 1, languageStandard::Int64 = 1000)::MKAbsyn.Program
   local res = ccall((:parseFile, installedLibPath), Any, (String, Int64, Int64), fileName, acceptedGram, languageStandard)
   if res == nothing
     throw(ParseError())

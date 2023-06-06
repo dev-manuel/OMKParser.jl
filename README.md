@@ -1,4 +1,4 @@
-# OMParser.jl
+# OMKParser.jl
 
 A parser for Modelica in Julia based on the OpenModelica parser.
 
@@ -10,18 +10,18 @@ If you have your own Julia installation you need to set the path to it
 ````
 export PATH=$PATH:/path/to/julia/bin
 ````
-Then clone OMParser.jl (we assume you have git installed, if not, install it)
+Then clone OMKParser.jl (we assume you have git installed, if not, install it)
 ````
-git clone https://github.com/OpenModelica/OMParser.jl
+git clone https://github.com/OpenModelica/OMKParser.jl
 ````
 Then just build the library using this script.
 ````
-cd OMParser.jl/lib/parser
+cd OMKParser.jl/lib/parser
 autoconf
 ./configure
 make
 ````
-The library will be built in OMParser.jl/lib/build/
+The library will be built in OMKParser.jl/lib/build/
 
 ### MSYS2/MinGW
 

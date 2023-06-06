@@ -1132,7 +1132,7 @@ when_clause_e returns [void* ast]
 
 else_when_e_list returns [void* ast]
 @init{ OM_PUSHZ2(es, e); } :
-  e=else_when_e es=else_when_e_list? { ast = mmc_mk_cons(e, or_nil(es)); /* TODO: This will need some casting to make sure e is always Absyn.Exp */ }
+  e=else_when_e es=else_when_e_list? { ast = mmc_mk_cons(e, or_nil(es)); /* TODO: This will need some casting to make sure e is always MKAbsyn.Exp */ }
   ;
   finally{ OM_POP(2); }
 
@@ -1153,7 +1153,7 @@ when_clause_a returns [void* ast]
 
 else_when_a_list returns [void* ast]
 @init{ OM_PUSHZ2(e, es); } :
-  e=else_when_a es=else_when_a_list? { ast = mmc_mk_cons(e,or_nil(es)); /* TODO: This will need some casting to make sure e is always Absyn.Exp */ }
+  e=else_when_a es=else_when_a_list? { ast = mmc_mk_cons(e,or_nil(es)); /* TODO: This will need some casting to make sure e is always MKAbsyn.Exp */ }
   ;
   finally{ OM_POP(2); }
 
@@ -1165,7 +1165,7 @@ else_when_a returns [void* ast]
 
 equation_elseif_list returns [void* ast]
 @init{ OM_PUSHZ2(e, es); } :
-  e=equation_elseif es=equation_elseif_list? { ast = mmc_mk_cons(e,or_nil(es)); /* TODO: This will need some casting to make sure e is always Absyn.Exp */ }
+  e=equation_elseif es=equation_elseif_list? { ast = mmc_mk_cons(e,or_nil(es)); /* TODO: This will need some casting to make sure e is always MKAbsyn.Exp */ }
   ;
   finally{ OM_POP(2); }
 
@@ -1177,7 +1177,7 @@ equation_elseif returns [void* ast]
 
 algorithm_elseif_list returns [void* ast]
 @init{ OM_PUSHZ2(a, as); } :
-  a=algorithm_elseif as=algorithm_elseif_list? { ast = mmc_mk_cons(a,or_nil(as)); /* TODO: This will need some casting to make sure e is always Absyn.Exp */ }
+  a=algorithm_elseif as=algorithm_elseif_list? { ast = mmc_mk_cons(a,or_nil(as)); /* TODO: This will need some casting to make sure e is always MKAbsyn.Exp */ }
   ;
   finally{ OM_POP(2); }
 
@@ -1312,7 +1312,7 @@ if_expression returns [void* ast]
 
 elseif_expression_list returns [void* ast]
 @init{ OM_PUSHZ2(e, es); } :
-  e=elseif_expression es=elseif_expression_list? { ast = mmc_mk_cons(e,or_nil(es)); /* TODO: Need the tuple to have Absyn.Exp */ }
+  e=elseif_expression es=elseif_expression_list? { ast = mmc_mk_cons(e,or_nil(es)); /* TODO: Need the tuple to have MKAbsyn.Exp */ }
   ;
   finally{ OM_POP(2); }
 

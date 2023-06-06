@@ -1,11 +1,11 @@
 using Test
-import OMParser
+import OMKParser
 
 @testset "Simple standalone modules" begin
 
   @test true == begin
     try
-      res = OMParser.parseFile("HelloWorld.mo")
+      res = OMKParser.parseFile("HelloWorld.mo")
       true
     catch err
       @info("Test failed with the following error:")
@@ -16,7 +16,7 @@ import OMParser
   
   @test true == begin
     try
-      res = OMParser.parseFile("Influenza.mo")
+      res = OMKParser.parseFile("Influenza.mo")
       true
     catch err
       @info("Test failed with the following error:")
@@ -27,7 +27,7 @@ import OMParser
   
   @test true == begin
     try
-      res = OMParser.parseFile("Casc12800.mo")
+      res = OMKParser.parseFile("Casc12800.mo")
       true
     catch err
       @info("Test failed with the following error:")
@@ -41,7 +41,7 @@ end
 @testset "Test OMCompiler.jl specific extensions" begin
   @test true == begin
     try
-      res = OMParser.parseFile("BreakingPendulum.mo")
+      res = OMKParser.parseFile("BreakingPendulum.mo")
       true
     catch err
       @info("Test failed with the following error:")
@@ -55,7 +55,7 @@ end
 @testset "Standard Library" begin
   @test true == begin
     try
-      res = OMParser.parseFile("msl.mo")
+      res = OMKParser.parseFile("msl.mo")
       true
     catch err
       @info("Test failed with the following error:")

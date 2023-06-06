@@ -8,7 +8,7 @@ $ autoconf
 $ ./configure 
 $ make
 ````
-The library will be built in OMParser.jl/lib/build/
+The library will be built in OMKParser.jl/lib/build/
 
 Cheers,
 Adrian Pop/

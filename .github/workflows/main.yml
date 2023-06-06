@@ -17,7 +17,7 @@ jobs:
     defaults:
       run:
         shell: ${{ matrix.sys.shell }}
-    name: building OMParser.jl/lib/parser
+    name: building OMKParser.jl/lib/parser
     steps:
     - name: setup julia environment
       uses: julia-actions/setup-julia@v1

@@ -55,7 +55,7 @@ if ! ("ImmutableList" in keys(pkgs))
   Pkg.add("ImmutableList")
 end
 
-import Absyn
+import MKAbsyn
 
 COPYRIGHT_HEADER = "/*
  * This file is part of OpenModelica.
