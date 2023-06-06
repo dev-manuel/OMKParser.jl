@@ -1,10 +1,10 @@
 name = "OMParser"
-uuid = "11f87224-cae7-4e99-a924-e50d12f62c59"
-authors = ["Adrian Pop <adrian.pop@liu.se", "John Tinnerholm <john.tinnerholm@liu.se>"]
+uuid = "2c54b994-9301-4e2a-a5cc-a7604ce4b9e0"
+authors = ["Manuel Krombholz <manuel_krofficia@online.de>","Adrian Pop <adrian.pop@liu.se", "John Tinnerholm <john.tinnerholm@liu.se>"]
 version = "0.0.2"
 
 [deps]
-Absyn = "ce2f92e2-a952-11e9-0543-8b443f216f1d"
+MKAbsyn = "4fcd8881-e130-45ae-8f8b-cd5c1340e0fc"
 CodecZlib = "944b1d66-785c-5afd-91f1-9de20f533193"
 ExportAll = "ad2082ca-a69e-11e9-38fa-e96309a31fe4"
 Glob = "c27321d9-0574-5035-807b-f59d2c89b15c"
