@@ -185,6 +185,10 @@ MOD;
 
 IDENT;
 
+
+/* conctext modelica */
+CONTEXT_ON;
+
 }
 
 @includes {
@@ -329,6 +333,20 @@ CODE_EXP : '$Exp';
 CODE_ANNOTATION : '$annotation';
 CODE_VAR : '$Var';
 
+// ---------
+// Context Modelica
+// ---------
+
+
+CONTEXT_ON : 'on';
+// CONTEXT : 'context';
+// END : 'end';
+//EQUATION_WHEN : 'whenn';
+//CONTEXT_WHEN : 'whennn';
+
+
+
+
 STRING : '"' STRING_GUTS '"'
        {
          pANTLR3_STRING text = $STRING_GUTS.text;
@@ -463,3 +481,4 @@ UNSIGNED_INTEGER :
           )?
       )
   ;
+

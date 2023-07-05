@@ -797,6 +797,52 @@ component_declaration1 returns [void* ast]
  * 2.2.6 Equations
  */
 
+// // Context Definition Section
+// context_clause [ void **ann] returns [void* ast]
+// @init { OM_PUSHZ1(es); } :
+//   CONTEXT es=context_list[ann] END CONTEXT SEMICOLON { ast = MKAbsyn__CONTEXTDEFINITIONSECTION(es); }
+//   ;
+//   finally{ OM_POP(1); }
+
+
+
+// Context List
+// context_list returns [void* ast]
+// @init{ f = NULL; OM_PUSHZ2(c.ast, cl); } :
+//   ((f=FINAL)? c=context_element_clause[f != NULL] SEMICOLON) cl=context_list?
+//     {
+//       ast = mmc_mk_cons_typed(MKAbsyn_Context, c.ast, or_nil(cl));
+//     }
+//   ;
+//   finally{ OM_POP(2); }
+  
+
+
+
+// Context (builds)
+context_element_clause [ void **ann] returns [void* ast]
+  @init{OM_PUSHZ2(label,es.ast);} :
+  { LA(2)==CONTEXT_ON }?
+  label=identifier CONTEXT_ON es=expression[metamodelica_enabled()] SEMICOLON { ast = MKAbsyn__CONTEXT(mmc_mk_scon(label),es.ast); }
+  ;
+finally{ OM_POP(2); }
+
+
+
+
+//Context Equation Section (builds)
+context_equation_clause [ void **ann] returns [void* ast]
+@init { OM_PUSHZ2(label,es); } :
+  // { LA(2)==CONTEXT_ON }?
+  EQUATION CONTEXT_ON label=identifier es=equation_annotation_list[ann] { ast = MKAbsyn__CONTEXTEQUATIONSECTION(mmc_mk_scon(label),es); }
+   ;
+  finally{ OM_POP(2); }
+
+
+
+
+
+
 initial_equation_clause [ void **ann] returns [void* ast]
 @init { OM_PUSHZ1(es); } :
   { LA(2)==EQUATION }?
