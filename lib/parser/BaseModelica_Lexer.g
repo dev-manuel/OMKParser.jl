@@ -188,6 +188,8 @@ IDENT;
 
 /* conctext modelica */
 CONTEXT_ON;
+CONTEXT_DEF;
+CONTEXT_DEF_END;
 
 }
 
@@ -232,6 +234,15 @@ IF : 'if';
 IMPORT : 'import';
 T_IN : 'in';
 INITIAL : 'initial';
+// ---------
+// Context Modelica
+// ---------
+
+
+CONTEXT_ON : 'on';
+CONTEXT_DEF : 'context';
+CONTEXT_DEF_END : 'end';
+
 INNER : 'inner';
 T_INPUT : 'input';
 LOOP : 'loop';
@@ -333,12 +344,7 @@ CODE_EXP : '$Exp';
 CODE_ANNOTATION : '$annotation';
 CODE_VAR : '$Var';
 
-// ---------
-// Context Modelica
-// ---------
 
-
-CONTEXT_ON : 'on';
 // CONTEXT : 'context';
 // END : 'end';
 //EQUATION_WHEN : 'whenn';
