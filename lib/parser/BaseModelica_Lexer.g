@@ -241,7 +241,7 @@ INITIAL : 'initial';
 
 CONTEXT_ON : 'on';
 CONTEXT_DEF : 'context';
-CONTEXT_DEF_END : 'end';
+CONTEXT_DEF_END : 'contextend';
 
 INNER : 'inner';
 T_INPUT : 'input';

@@ -362,6 +362,7 @@ composition2 [ void **ann] returns [void* ast]
     | el=protected_element_list[ann]
     | el=initial_equation_clause[ann]
     | el=initial_algorithm_clause[ann]
+    | el=context_definition_section_clause[ann]
     | el=context_equation_clause[ann]
     | el=equation_clause[ann]
     | el=constraint_clause[ann]
@@ -799,46 +800,40 @@ component_declaration1 returns [void* ast]
  */
 
 
-
-
-
-
-
-
-//Context Equation Section (builds)
 context_equation_clause [ void **ann] returns [void* ast]
 @init {OM_PUSHZ2(label,es);} :
 EQUATION CONTEXT_ON label=identifier es=equation_annotation_list[ann] {
-  ast = MKAbsyn__CONTEXTEQUATIONSECTIONS(__mmc_mk_cons(MKAbsyn__CONTEXTEQUATIONSECTION(mmc_mk_scon(label),es),mmc_mk_nil()));
+  ast = MKAbsyn__CONTEXTEQUATIONS(mmc_mk_scon(label),es),mmc_mk_nil();
 }
-   ;
+;
+finally{ OM_POP(2); }
+
+
+
+context_definition_section_clause [ void **ann] returns [void* ast]
+@init { OM_PUSHZ1(cs); } :
+  CONTEXT_DEF cs=context_definition_list CONTEXT_DEF_END { ast = MKAbsyn__CONTEXTDEFINITIONSECTION(cs); }
+  ;
+  finally{ OM_POP(1); }
+
+
+
+context_definition_list returns [void* ast]
+@init { OM_PUSHZ2(e1, el); } :
+  e1=context_definition SEMICOLON (el=context_definition_list)? {ast = (el == NULL ? mmc_mk_cons_typed(MKAbsyn_ContextDefinition, e1, mmc_mk_nil()) : mmc_mk_cons_typed(MKAbsyn_ContextDefinition, e1, el)); }
+  ;
   finally{ OM_POP(2); }
 
 
-
-// Context List
-// context_section_clause [ void **ann] returns [void* ast]
-// @init {printf("match"); OM_PUSHZ1(cl.ast);} :
-// CONTEXT_DEF cl=context_element_clause[ann]
-//   {
-//     jl_debug_println(cl);
-//     ast = MKAbsyn__CONTEXTDEFINITIONSECTIONS(__mmc_mk_cons(MKAbsyn__CONTEXTDEFINITIONSECTION(cl.ast),mmc_mk_nil()));
-//   }
-//   ;
-// finally{ OM_POP(1); }
-
-
-// context_element_clause [ void **ann]  returns [void* ast]
-// @init {OM_PUSHZ2(label,c.ast);} :
-//   label=identifier CONTEXT_ON c=expression[metamodelica_enabled()] SEMICOLON
-//   {
-//     ast = MKAbsyn__CONTEXT(mmc_mk_scon(label),mmc_mk_cons_typed(MKAbsyn_Exp, c.ast, mmc_mk_nil()));
-//   }
-//   ;
-// finally{ OM_POP(2); }
-
-
-
+context_definition returns [void* ast]
+@init {OM_PUSHZ2(label,c.ast);} :
+  { LA(2)==CONTEXT_ON }?
+  label=identifier CONTEXT_ON c=expression[metamodelica_enabled()]
+  {
+    ast = MKAbsyn__CONTEXTDEFINITION(mmc_mk_scon(label),mmc_mk_cons_typed(MKAbsyn_Exp, c.ast, mmc_mk_nil()));
+  }
+  ;
+  finally{ OM_POP(2); }
 
 
 
