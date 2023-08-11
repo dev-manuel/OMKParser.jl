@@ -800,7 +800,7 @@ component_declaration1 returns [void* ast]
  */
 
 
-context_equation_clause [ void **ann] returns [void* ast]
+context_equation_clause [void **ann] returns [void* ast]
 @init {OM_PUSHZ2(label,es);} :
 EQUATION CONTEXT_ON label=identifier es=equation_annotation_list[ann] {
   ast = MKAbsyn__CONTEXTEQUATIONS(mmc_mk_scon(label),es),mmc_mk_nil();
@@ -810,9 +810,9 @@ finally{ OM_POP(2); }
 
 
 
-context_definition_section_clause [ void **ann] returns [void* ast]
+context_definition_section_clause [void **ann] returns [void* ast]
 @init { OM_PUSHZ1(cs); } :
-  CONTEXT_DEF cs=context_definition_list CONTEXT_DEF_END { ast = MKAbsyn__CONTEXTDEFINITIONSECTION(cs); }
+  CONTEXT_DEF cs=context_definition_list CONTEXT_DEF_END SEMICOLON { ast = MKAbsyn__CONTEXTDEFINITIONSECTION(cs); }
   ;
   finally{ OM_POP(1); }
 
@@ -830,7 +830,7 @@ context_definition returns [void* ast]
   { LA(2)==CONTEXT_ON }?
   label=identifier CONTEXT_ON c=expression[metamodelica_enabled()]
   {
-    ast = MKAbsyn__CONTEXTDEFINITION(mmc_mk_scon(label),mmc_mk_cons_typed(MKAbsyn_Exp, c.ast, mmc_mk_nil()));
+    ast = MKAbsyn__CONTEXTDEFINITION(mmc_mk_scon(label), c.ast);
   }
   ;
   finally{ OM_POP(2); }

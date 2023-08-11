@@ -186,7 +186,7 @@ MOD;
 IDENT;
 
 
-/* conctext modelica */
+/* context modelica */
 CONTEXT_ON;
 CONTEXT_DEF;
 CONTEXT_DEF_END;
@@ -241,7 +241,7 @@ INITIAL : 'initial';
 
 CONTEXT_ON : 'on';
 CONTEXT_DEF : 'context';
-CONTEXT_DEF_END : 'contextend';
+//CONTEXT_DEF_END : 'contextend';
 
 INNER : 'inner';
 T_INPUT : 'input';
@@ -436,6 +436,7 @@ END_IF : 'end' EAT_WS_COMMENT 'if';
 END_FOR : 'end' EAT_WS_COMMENT 'for';
 END_WHEN : 'end' EAT_WS_COMMENT 'when';
 END_WHILE : 'end' EAT_WS_COMMENT 'while';
+CONTEXT_DEF_END : 'end' EAT_WS_COMMENT 'context';
 END_IDENT : 'end' EAT_WS_COMMENT
     ( IDENT2 {SETTEXT($IDENT2.text);}
     | QIDENT {SETTEXT($QIDENT.text);}
