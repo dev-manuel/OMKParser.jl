@@ -43,17 +43,25 @@ Pkg.Registry.add(Pkg.RegistrySpec(url="https://github.com/JKRT/OpenModelicaRegis
 
 pkgs = Pkg.installed()
 #= Add the latest Absyn from the master branch but only if Absyn is not installed =#
-if ! ("Absyn" in keys(pkgs))
-  Pkg.add(Pkg.PackageSpec(url="https://github.com/dev-manuel/MKAbsyn.jl.git", rev="master"))
-end
 
-if ! ("MetaModelica" in keys(pkgs))
+if !("MetaModelica" in keys(pkgs))
   Pkg.add("MetaModelica")
 end
 
-if ! ("ImmutableList" in keys(pkgs))
+if !("ImmutableList" in keys(pkgs))
   Pkg.add("ImmutableList")
 end
+
+if !("MKAbsyn" in keys(pkgs))
+  Pkg.add(Pkg.PackageSpec(url="https://github.com/dev-manuel/MKAbsyn.jl.git", rev="master"))
+end
+
+# Pkg.activate("ScriptEnvironment"; shared=true)
+# Pkg.develop(Pkg.PackageSpec(; path="/mnt/c/Users/Manuel/Desktop/master-thesis/OMK.jl/MetaModelica.jl"))
+# Pkg.develop(Pkg.PackageSpec(; path="/mnt/c/Users/Manuel/Desktop/master-thesis/MKAbsyn.jl"))
+# Pkg.develop(Pkg.PackageSpec(; path="/mnt/c/Users/Manuel/Desktop/master-thesis/OMK.jl/ImmutableList.jl"))
+
+
 
 import MKAbsyn
 
@@ -157,7 +165,7 @@ end
   Generate the program external header for Julia.
   @author johti17, based on code by adrpo.
 """
-function programExternalHeaderJulia(allDataTypes, moduleName)  
+function programExternalHeaderJulia(allDataTypes, moduleName)
   local buffer = IOBuffer()
   println(buffer, COPYRIGHT_HEADER)
   println(buffer, "/* Automatically generated header for external MetaModelica functions */")
@@ -227,7 +235,7 @@ function generateJL_Values(allDataTypes)
       println(buffer, funcStr)
       println(buffer, valueStr)
     end
-  end    
+  end
   String(take!(buffer))
 end
 
@@ -267,14 +275,14 @@ function generateJL_Asserts(allDataTypes, moduleName)
       #= Get <Module>_<Uniontype>_<Record> =#
       local qualifiedName = getSuperTypePath(dataType)
       #= Get qualified path for basic datatype =#
-      local baseTypeStr = components[2]        
+      local baseTypeStr = components[2]
       local assertStr1 = "assert(($qualifiedName = jl_get_function($(moduleName), \"$(baseTypeStr)\")));"
       local assertStr2 = "assert(($(qualifiedName)_type = jl_get_global($(moduleName), jl_symbol(\"$(baseTypeStr)\"))));"
       println(buffer, assertStr1)
       println(buffer, assertStr2)
       #=TODO is the double underscore important?=#
     end
-  end  
+  end
   return String(take!(buffer))
 end
 
@@ -289,12 +297,12 @@ This is followed by a function definition
 """
 function generateExternalDeclarations(allSuperTypes)
   local buffer = IOBuffer()
-  println(buffer, "/* Extern declarations */")  
+  println(buffer, "/* Extern declarations */")
   for superType in allSuperTypes
-    local subTypes = subtypes(superType) 
+    local subTypes = subtypes(superType)
     local components = split(string(superType), ".")
     local qualifiedName = getQualifiedName(components)
-    if length(components) < 2 #= Some components are to small to include=#      
+    if length(components) < 2 #= Some components are to small to include=#
       continue
     end
     local baseTypeStr = components[2] #= In this case the base type should be the type without the absyn prefix=#
@@ -305,7 +313,7 @@ function generateExternalDeclarations(allSuperTypes)
     for subType in subTypes
       local components = split(string(subType), ".")
       local qualifiedName = getSuperTypePath(subType)
-      local baseTypeStr = components[2]        
+      local baseTypeStr = components[2]
       local functionName = string("extern jl_function_t *", qualifiedName, ";")
       local typeName = string("extern jl_function_t *", qualifiedName, "_type", ";")
       println(buffer, functionName)
@@ -313,15 +321,15 @@ function generateExternalDeclarations(allSuperTypes)
       #= Find out the amount of function arguments to create these types =#
       local fieldNames = fieldnames(subType)
       local fieldNameLength = length(fieldNames)
-      local fullName = string("Absyn__", replace(getBaseNameAsStr(subType), "_" => "_5f"))
-      if fieldNameLength  == 0
+      local fullName = string("MKAbsyn__", replace(getBaseNameAsStr(subType), "_" => "_5f"))
+      if fieldNameLength == 0
         println(buffer, "#define $(fullName) jl_call0($(qualifiedName))")
       elseif fieldNameLength <= 3
         local fieldNamesAsStrWithType = join(map((x) -> string("jl_value_t *", x), fieldNames), ", ")
         local fieldNamesAsStrWithoutType = join(map(string, fieldNames), ", ")
         local arguments = fieldNamesAsStrWithType
         local staticFuncHeader = string("static inline jl_value_t *", fullName, "(", "$(arguments)", ")", " {")
-        local body = string("return ","jl_call", string(fieldNameLength), "(", qualifiedName, ", " ,fieldNamesAsStrWithoutType, ")", ";")
+        local body = string("return ", "jl_call", string(fieldNameLength), "(", qualifiedName, ", ", fieldNamesAsStrWithoutType, ")", ";")
         local staticFuncEpilog = "}"
         println(buffer, staticFuncHeader)
         println(buffer, body)
@@ -332,13 +340,13 @@ function generateExternalDeclarations(allSuperTypes)
         local fieldNamesAsStrWithoutType = join(map(string, fieldNames), ", ")
         local staticFuncHeader = string("static inline jl_value_t *", fullName, "(", "$(arguments)", ")", " {")
         local arrayDecl = "jl_value_t *values[$(fieldNameLength)] = {$(fieldNamesAsStrWithoutType)};"
-        local returnStmt = string("return ","jl_call", "(", qualifiedName, ", " ,"values, ",  "$(fieldNameLength)" ,")", ";")
+        local returnStmt = string("return ", "jl_call", "(", qualifiedName, ", ", "values, ", "$(fieldNameLength)", ")", ";")
         local staticFuncEpilog = "}"
         println(buffer, staticFuncHeader)
         println(buffer, arrayDecl)
         println(buffer, returnStmt)
         println(buffer, staticFuncEpilog)
-      end        
+      end
     end
     println(buffer, "/* End External declarations for the uniontype" * string(superType) * " */")
   end
@@ -347,9 +355,9 @@ end
 
 
 #= Generate C-Code from the headers =#
-allDataTypes =  unique(filter((x) -> x != String, getTypes(Absyn)))
-res = programExternalHeaderJulia(allDataTypes, "Absyn")
+allDataTypes = unique(filter((x) -> x != String, getTypes(MKAbsyn)))
+res = programExternalHeaderJulia(allDataTypes, "MKAbsyn")
 #= Write to file =#
- open("OpenModelicaJuliaHeader.h.new", "w") do io
-   write(io, res)
- end;
+open("OpenModelicaJuliaHeader.h.new", "w") do io
+  write(io, res)
+end;
