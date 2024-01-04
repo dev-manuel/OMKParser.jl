@@ -360,7 +360,6 @@ composition2 [ void **ann] returns [void* ast]
   ( ext=external_clause? { ast = or_nil(ext); }
   | ( el=public_element_list[ann]
     | el=protected_element_list[ann]
-    | el=private_element_list[ann]
     | el=initial_equation_clause[ann]
     | el=initial_algorithm_clause[ann]
     | el=context_definition_section_clause[ann]
@@ -410,12 +409,6 @@ public_element_list [ void **ann] returns [void* ast]
 protected_element_list [ void **ann] returns [void* ast]
 @init { OM_PUSHZ1(es); } :
   PROTECTED es=element_list[ann] {ast = MKAbsyn__PROTECTED(es); }
-  ;
-  finally{ OM_POP(1); }
-
-private_element_list [ void **ann] returns [void* ast]
-@init { OM_PUSHZ1(es); } :
-  PRIVATE es=element_list[ann] {ast = MKAbsyn__PRIVATE(es); }
   ;
   finally{ OM_POP(1); }
 
@@ -877,7 +870,7 @@ equation_annotation_list [ void **ann] returns [void* ast]
   }
 } :
   (
-  { LA(1) != END_IDENT && LA(1) != CONSTRAINT && LA(1) != EQUATION && LA(1) != T_ALGORITHM && LA(1)!=INITIAL && LA(1) != PRIVATE && LA(1) != PROTECTED && LA(1) != PUBLIC }? =>
+  { LA(1) != END_IDENT && LA(1) != CONSTRAINT && LA(1) != EQUATION && LA(1) != T_ALGORITHM && LA(1)!=INITIAL && LA(1) != PROTECTED && LA(1) != PUBLIC }? =>
   ( eq=equation SEMICOLON { ast = mmc_mk_cons_typed(MKAbsyn_EquationItem, eq.ast, ast); }
   | ea=annotation SEMICOLON {*ann = mmc_mk_cons_typed(MKAbsyn_Annotation, ea, *ann);}
   )
@@ -904,7 +897,7 @@ constraint_annotation_list [ void **ann] returns [void* ast]
 @init { OM_PUSHZ3(co, c, cs); }
 :
   { LA(1) == END_IDENT || LA(1) == CONSTRAINT || LA(1) == EQUATION || LA(1) ==
-T_ALGORITHM || LA(1)==INITIAL || LA(1) == PRIVATE || LA(1) == PROTECTED || LA(1) == PUBLIC }?
+T_ALGORITHM || LA(1)==INITIAL || LA(1) == PROTECTED || LA(1) == PUBLIC }?
     { ast = mmc_mk_nil(); }
   |
   ( co=constraint SEMICOLON { c = co; }
@@ -941,7 +934,7 @@ algorithm_annotation_list [ void **ann, int matchCase] returns [void* ast]
   }
 } :
   (
-    { matchCase ? LA(1) != THEN : (LA(1) != END_IDENT && LA(1) != EQUATION && LA(1) != T_ALGORITHM && LA(1)!=INITIAL && LA(1) != PRIVATE && LA(1) != PROTECTED && LA(1) != PUBLIC) }?=>
+    { matchCase ? LA(1) != THEN : (LA(1) != END_IDENT && LA(1) != EQUATION && LA(1) != T_ALGORITHM && LA(1)!=INITIAL && LA(1) != PROTECTED && LA(1) != PUBLIC) }?=>
   ( al=algorithm SEMICOLON { $ast = mmc_mk_cons_typed(MKAbsyn_AlgorithmItem, al.ast,$ast); }
   | a=annotation SEMICOLON {
       if (ann) {
