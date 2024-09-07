@@ -42,7 +42,14 @@ Pkg.Registry.add("General")
 Pkg.Registry.add(Pkg.RegistrySpec(url="https://github.com/JKRT/OpenModelicaRegistry.git"));
 
 pkgs = Pkg.installed()
+if !("MetaModelica" in keys(pkgs))
+  Pkg.add(Pkg.PackageSpec(url="https://github.com/OpenModelica/MetaModelica.jl.git", rev="master"))
+end
+
 #= Add the latest Absyn from the master branch but only if Absyn is not installed =#
+if !("MKAbsyn" in keys(pkgs))
+  Pkg.add(Pkg.PackageSpec(url="https://github.com/dev-manuel/MKAbsyn.jl.git", rev="master"))
+end
 
 if !("MetaModelica" in keys(pkgs))
   Pkg.add("MetaModelica")
@@ -51,6 +58,8 @@ end
 if !("ImmutableList" in keys(pkgs))
   Pkg.add("ImmutableList")
 end
+
+Pkg.resolve()
 
 if !("MKAbsyn" in keys(pkgs))
   Pkg.add(Pkg.PackageSpec(url="https://github.com/dev-manuel/MKAbsyn.jl.git", rev="master"))

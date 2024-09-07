@@ -3,6 +3,16 @@
 import ZipFile
 import Tar
 import Inflate
+import Pkg
+pkgs = Pkg.installed()
+
+if !("MetaModelica" in keys(pkgs))
+  Pkg.add(Pkg.PackageSpec(url="https://github.com/OpenModelica/MetaModelica.jl.git", rev="master"))
+end
+if !("MKAbsyn" in keys(pkgs))
+  Pkg.add(Pkg.PackageSpec(url="https://github.com/dev-manuel/MKAbsyn.jl.git", rev="master"))
+  Pkg.develop(Pkg.PackageSpec(url="https://github.com/dev-manuel/MKAbsyn.jl.git", rev="master"))
+end
 
 function extractTar(libraryString; URL)
   @info "Downloading Linux so file..."
@@ -37,18 +47,23 @@ end
 using HTTP
 #=Extern path=#
 PATH_TO_EXT = realpath("$(pwd())/../lib/ext")
+
+
+@static if v"1.10.0" < VERSION
+  throw("precompilation is currently only supported for Julia version 1.10 or greater. For prior versions of Julia please download and extract the libraries available at https://github.com/OpenModelica/OMParser.jl/releases")
+end
+
 @static if Sys.iswindows()
   #= Download shared libraries (DLLS for Windows)=#
   extractTar("windows-latest-library";
-             URL="https://github.com/OpenModelica/OMParser.jl/releases/download/Latest-windows-latest/windows-latest-library.tar.gz")
+    URL="https://github.com/OpenModelica/OMParser.jl/releases/download/Latest-windows-latest/windows-latest-library.tar.gz")
 elseif Sys.islinux()
   extractTar("ubuntu-latest-library";
-             URL="https://github.com/OpenModelica/OMParser.jl/releases/download/Latest-ubuntu-latest/ubuntu-latest-library.tar.gz")
+    URL="https://github.com/OpenModelica/OMParser.jl/releases/download/Latest-ubuntu-latest/ubuntu-latest-library.tar.gz")
 elseif Sys.isapple()
   extractTar("macos-latest-library";
-             URL="https://github.com/OpenModelica/OMParser.jl/releases/download/Latest-macos-latest/macos-latest-library.tar.gz")
-else#= Throw error for other variants =#
+    URL="https://github.com/OpenModelica/OMParser.jl/releases/download/Latest-macos-latest/macos-latest-library.tar.gz")
+else #= Throw error for other variants =#
   @error "Non Linux/Windows systems are currently not supported"
   throw("Unsupported system error")
 end
-
